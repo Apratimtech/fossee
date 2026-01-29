@@ -1,0 +1,5 @@
+Django>=4.0
+djangorestframework>=3.13
+django-cors-headers>=4.0
+pandas>=1.5
+reportlab>=4.0
