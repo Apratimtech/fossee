@@ -1,0 +1,39 @@
+databases:
+  - name: chemical_db
+    databaseName: chemical_visualizer
+    user: chemical_user
+
+services:
+  - type: web
+    name: chemical-visualizer-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: "chmod +x build.sh && ./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.5
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chemical_db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        fromService:
+          type: static
+          name: chemical-visualizer-web
+          property: url
+
+  - type: static
+    name: chemical-visualizer-web
+    runtime: node
+    rootDir: frontend-web
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: chemical-visualizer-backend
+          property: url
