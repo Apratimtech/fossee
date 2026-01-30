@@ -27,7 +27,6 @@ services:
 
   - type: static
     name: chemical-visualizer-web
-    runtime: node
     rootDir: frontend-web
     buildCommand: npm install && npm run build
     publishDir: dist
